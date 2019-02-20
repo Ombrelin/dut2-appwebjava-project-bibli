@@ -13,7 +13,10 @@ public class MediathequeData implements PersistentMediatheque {
 		Mediatheque.getInstance().setData(new MediathequeData());
 	}
 
+	Utilisateurs dbUtilisateur;
+	
 	private MediathequeData() {
+		dbUtilisateur = new Utilisateurs();
 	}
 
 	// renvoie la liste de tous les documents de la biblioth�que
@@ -26,7 +29,7 @@ public class MediathequeData implements PersistentMediatheque {
 	// si pas trouv�, renvoie null
 	@Override
 	public Utilisateur getUser(String login, String password) {
-		return null;
+		return dbUtilisateur.connect(login, password);
 	}
 
 	// va r�cup�rer le document de num�ro numDocument dans la BD

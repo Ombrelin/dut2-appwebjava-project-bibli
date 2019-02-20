@@ -7,9 +7,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import mediatheque.Document;
 import mediatheque.Mediatheque;
+import mediatheque.Utilisateur;
 
 /**
  * Servlet implementation class Login
@@ -42,7 +44,23 @@ public class Login extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+		// Récupération de la session
+		HttpSession session = request.getSession();
+
+		// Récupération des informations du formulaire
+		String login = request.getParameter("login");
+		String password = request.getParameter("password");
+
+		Utilisateur u = Mediatheque.getInstance().getUser(login, password);
+
+		if (u != null) {
+			session.setAttribute("utilisateur", u);
+			request.getRequestDispatcher("./Welcome").forward(request, response);
+		}
+		else {
+			request.setAttribute("erreur", "Login ou Mot de passe invalide");
+			this.getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+		}
 	}
 
 }

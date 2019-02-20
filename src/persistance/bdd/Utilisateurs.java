@@ -1,7 +1,6 @@
 package persistance.bdd;
 
 import java.sql.PreparedStatement;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,6 +10,8 @@ import java.util.List;
 import exceptions.MauvaisMDPException;
 import exceptions.UtilisateurInexistantException;
 import mediatheque.Utilisateur;
+import persistance.modele.utilisateur.AUtilisateur;
+import persistance.modele.utilisateur.FactoryUtilisateur;
 import util.securite.Password;
 
 public class Utilisateurs extends DatabaseAccess<Utilisateur> {
@@ -21,12 +22,13 @@ public class Utilisateurs extends DatabaseAccess<Utilisateur> {
 
 	@Override
 	public void insert(Utilisateur tuple) {
+		AUtilisateur u = (AUtilisateur) tuple;
 		try {
 			PreparedStatement requete = this.getConnexion()
-					.prepareStatement("INSERT INTO utilisateur(Pseudo,Adresse_Email,Mot_de_Passe) VALUES(?,?,?)");
-			requete.setString(1, tuple.getPseudo());
-			requete.setString(2, tuple.getAdresseMail());
-			requete.setString(3,Password.hashPassword(tuple.getMdp()) );
+					.prepareStatement("INSERT INTO utilisateur(login,password,isBib) VALUES(?,?,?)");
+			requete.setString(1, u.getLogin());
+			requete.setString(2, Password.hashPassword(u.getPassword()));
+			requete.setBoolean(3, u.isBibliothecaire());
 			requete.executeUpdate();
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
@@ -51,8 +53,8 @@ public class Utilisateurs extends DatabaseAccess<Utilisateur> {
 
 			// R�cup�ration des donn�es
 			while (resultat.next()) {
-				Utilisateur u = new Utilisateur(resultat.getInt("IdUtilisateur"), resultat.getString("Pseudo"),
-						resultat.getString("Adresse_Email"), resultat.getString("Mot_de_Passe"));
+				Utilisateur u = FactoryUtilisateur.creerUtilisateur(resultat.getBoolean("isBib"),
+						resultat.getInt("IdUtilisateur"), resultat.getString("login"), resultat.getString("password"));
 				utilisateurs.add(u);
 			}
 
@@ -89,8 +91,8 @@ public class Utilisateurs extends DatabaseAccess<Utilisateur> {
 
 			// R�cup�ration des donn�es
 			if (resultat.next()) {
-				u = new Utilisateur(resultat.getInt("IdUtilisateur"), resultat.getString("Pseudo"),
-						resultat.getString("Adresse_Email"), resultat.getString("Mot_de_Passe"));
+				u = FactoryUtilisateur.creerUtilisateur(resultat.getBoolean("isBib"), resultat.getInt("IdUtilisateur"),
+						resultat.getString("login"), resultat.getString("password"));
 			}
 
 		} catch (SQLException e) {
@@ -112,11 +114,11 @@ public class Utilisateurs extends DatabaseAccess<Utilisateur> {
 	@Override
 	public void delete(Utilisateur tuple) {
 		PreparedStatement requete = null;
-
+		AUtilisateur u = (AUtilisateur) tuple;
 		try {
 			// Initialisation de la requ�te SQL
-			requete = this.getConnexion().prepareStatement("DELETE FROM utilisateur WHERE id=?");
-			requete.setInt(1, tuple.getID());
+			requete = this.getConnexion().prepareStatement("DELETE FROM utilisateur WHERE IdUtilisateur=?");
+			requete.setInt(1, u.getId());
 			// Ex�cution de la requ�te SQL
 			requete.executeUpdate();
 
@@ -140,24 +142,20 @@ public class Utilisateurs extends DatabaseAccess<Utilisateur> {
 		Utilisateur u = null;
 
 		try {
-			requete = this.getConnexion()
-					.prepareStatement("SELECT * FROM utilisateur WHERE Adresse_Email=? OR Pseudo=?");
+			requete = this.getConnexion().prepareStatement("SELECT * FROM utilisateur WHERE login=?");
 			requete.setString(1, login);
-			requete.setString(2, login);
 			resultat = requete.executeQuery();
 
 			if (resultat.next()) {
-				String passwordHashDB = resultat.getString("Mot_de_Passe");
+				String passwordHashDB = resultat.getString("password");
 				pwdCheck = Password.checkPassword(plainPassword, passwordHashDB);
 
 				if (pwdCheck) {
 					System.out.println("Mot de passe valide");
-					int id = resultat.getInt("IdUtilisateur");
-					String pseudo = resultat.getString("Pseudo");
-					String email = resultat.getString("Adresse_Email");
-					String mdp = resultat.getString("Mot_de_Passe");
 
-					u = new Utilisateur(id, pseudo, email, mdp);
+					u = FactoryUtilisateur.creerUtilisateur(resultat.getBoolean("isBib"),
+							resultat.getInt("IdUtilisateur"), resultat.getString("login"),
+							resultat.getString("password"));
 
 				} else {
 					System.out.println("Mot de passe invalide");
@@ -169,7 +167,7 @@ public class Utilisateurs extends DatabaseAccess<Utilisateur> {
 				throw new UtilisateurInexistantException("L'utilisateur " + login + " n'existe pas");
 			}
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		} finally {
 			try {
 				if (resultat != null)
@@ -185,17 +183,18 @@ public class Utilisateurs extends DatabaseAccess<Utilisateur> {
 	public int getId(Utilisateur u) {
 		ResultSet resultat = null;
 		PreparedStatement requete = null;
+		AUtilisateur tuple = (AUtilisateur) u;
 		int id = 0;
 		try {
 			// Initialisation de la requ�te SQL
-			requete = this.getConnexion().prepareStatement("SELECT * FROM projet WHERE Adresse_Email=?");
-			requete.setString(1, u.getAdresseMail());
+			requete = this.getConnexion().prepareStatement("SELECT * FROM projet WHERE login=?");
+			requete.setString(1, tuple.getLogin());
 			// Ex�cution de la requ�te SQL
 			resultat = requete.executeQuery();
 
 			// R�cup�ration des donn�es
 			if (resultat.next()) {
-				id = resultat.getInt("IdProjet");
+				id = resultat.getInt("IdUtilisateur");
 			}
 
 		} catch (Exception e) {
@@ -211,40 +210,4 @@ public class Utilisateurs extends DatabaseAccess<Utilisateur> {
 		return id;
 	}
 
-	public boolean adressIsNouvelle(String adresse) {
-
-		ResultSet resultat = null;
-		Statement requete = null;
-
-		try {
-			// Initialisation de la requ�te SQL
-			requete = this.getConnexion().createStatement();
-
-			// Ex�cution de la requ�te SQL
-			resultat = requete.executeQuery("SELECT * FROM utilisateur WHERE Adresse_Email=" + "'" + adresse + "';");
-
-			// R�cup�ration des donn�es
-			if (resultat.next()) {
-				return false;
-			} else {
-				return true;
-			}
-
-		} catch (SQLException e) {
-			System.err.println("Probl�me � la recherche de l'email");
-			e.printStackTrace();
-		} finally {
-			try {
-				if (resultat != null)
-					resultat.close();
-				if (requete != null)
-					requete.close();
-			} catch (SQLException e) {
-				System.err.println("Probl�me de fermeture du resultat");
-				e.printStackTrace();
-			}
-		}
-
-		return false;
-	}
 }

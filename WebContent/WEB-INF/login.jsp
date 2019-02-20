@@ -17,7 +17,7 @@
 <input type="password" name="password" id="password"/>
 
 <input type="submit" value="Connexion"/>
-
+<j:out value="${ erreur }"></j:out>
 </form>
 </body>
 </html>
