@@ -8,8 +8,8 @@ public class DVD extends ADocument {
 	
 	private Qualite qualite;
 	
-	public DVD(int numero,String titre, LocalDate date, String realisateur ,Qualite qualite) {
-		super(numero,titre, date);
+	public DVD(int numero,String titre, LocalDate date, String realisateur ,Qualite qualite, EtatDocument etat) {
+		super(numero,titre, date, etat);
 		this.realisateur = realisateur;
 		this.qualite = qualite;
 	}

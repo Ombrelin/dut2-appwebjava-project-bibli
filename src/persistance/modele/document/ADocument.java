@@ -16,11 +16,12 @@ public abstract class ADocument implements Document {
 
 	private EtatDocument etat;
 
-	public ADocument(int numero, String titre, LocalDate date) {
+	public ADocument(int numero, String titre, LocalDate date, EtatDocument etat) {
 		super();
 		this.titre = titre;
 		this.date = date;
 		this.numero = numero;
+		this.etat = etat;
 	}
 
 	@Override

@@ -14,7 +14,7 @@ import persistance.modele.utilisateur.AUtilisateur;
 import persistance.modele.utilisateur.FactoryUtilisateur;
 import util.securite.Password;
 
-public class Utilisateurs extends DatabaseAccess<Utilisateur> {
+public class Utilisateurs extends DAO<Utilisateur> {
 
 	public Utilisateurs() {
 		super();

@@ -6,8 +6,8 @@ public class Livre extends ADocument {
 
 	private String auteur;
 
-	public Livre(int numero,String titre, LocalDate date, String auteur) {
-		super(numero,titre, date);
+	public Livre(int numero,String titre, LocalDate date, String auteur, EtatDocument etat) {
+		super(numero,titre, date, etat);
 		this.auteur = auteur;
 	}
 

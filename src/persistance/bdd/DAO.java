@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @param <T> Type des objets stock�s dans la table
  */
-public abstract class DatabaseAccess<T> {
+public abstract class DAO<T> {
 
 	/**
 	 * Connexion � la base de donn�e
@@ -20,7 +20,7 @@ public abstract class DatabaseAccess<T> {
 	/**
 	 * Constructeur
 	 */
-	public DatabaseAccess() {
+	public DAO() {
 		this.connexion = Connecteur.getConnexion();
 	}
 
