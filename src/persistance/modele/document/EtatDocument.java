@@ -7,4 +7,5 @@ import mediatheque.Utilisateur;
 public interface EtatDocument {
 	EtatDocument emprunter(Utilisateur u, Document d) throws EmpruntException;
 	EtatDocument retour(Document d);
+	boolean isEmprunte();
 }

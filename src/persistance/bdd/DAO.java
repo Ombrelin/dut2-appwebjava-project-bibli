@@ -51,7 +51,7 @@ public abstract class DAO<T> {
 	 * 
 	 * @param tuple L'ojet � supprimer
 	 */
-	public abstract void delete(T tuple);
+	public abstract void delete(int id);
 
 	public static java.sql.Date convertUtilToSql(java.util.Date uDate) {
 		java.sql.Date sDate = new java.sql.Date(uDate.getTime());

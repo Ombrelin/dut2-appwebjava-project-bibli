@@ -8,6 +8,15 @@ public class CD extends ADocument {
 
 	private String artiste;
 
+	
+	
+	public CD(String titre, LocalDate date, String genre, String artiste,EtatDocument etat) {
+		super(titre, date, etat);
+		this.genre = genre;
+		this.artiste = artiste;
+
+	}
+
 	public CD(int numero,String titre, LocalDate date, String genre, String artiste, EtatDocument etat) {
 		super(numero,titre, date, etat);
 		this.genre = genre;

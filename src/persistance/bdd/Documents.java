@@ -1,12 +1,18 @@
 package persistance.bdd;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
 import mediatheque.Document;
+import persistance.modele.document.ADocument;
+import persistance.modele.document.CD;
+import persistance.modele.document.DVD;
 import persistance.modele.document.EtatDocument;
 import persistance.modele.document.Livre;
 import persistance.modele.etatdoc.Emprunte;
@@ -16,49 +22,293 @@ public class Documents extends DAO<Document> {
 
 	@Override
 	public void insert(Document tuple) {
-		// TODO Auto-generated method stub
+		PreparedStatement requete = null;
+		ResultSet resultat = null;
+		ADocument doc = (ADocument) tuple;
+		try {
+			requete = this.getConnexion().prepareStatement(
+					"INSERT INTO documents(titreDocument,dateDocument,emprunte,type) VALUES(?,?,?,?)");
+			requete.setString(1, doc.getTitre());
+			requete.setDate(2, Date.valueOf(doc.getDate()));
+			requete.setBoolean(3, doc.isEmprunte());
+			requete.setString(4, doc.getClass().getSimpleName());
 
+			requete.executeUpdate();
+
+			resultat = requete.getGeneratedKeys();
+			resultat.next();
+			int id = (int) resultat.getLong(1);
+
+			if (tuple instanceof Livre) {
+				Livre l = (Livre) doc;
+
+				requete = this.getConnexion().prepareStatement("INSERT INTO livre(idLivre,	auteur) VALUES(?,?)");
+				requete.setInt(1, id);
+				requete.setString(2, l.getAuteur());
+			} else if (tuple instanceof DVD) {
+				DVD d = (DVD) doc;
+				requete = this.getConnexion()
+						.prepareStatement("INSERT INTO DVD(idDVD, realisateur, qualite) VALUES(?,?,?)");
+				requete.setInt(1, id);
+				requete.setString(2, d.getRealisateur());
+				requete.setString(3, d.getQualite().toString());
+			} else if (tuple instanceof CD) {
+				CD c = (CD) doc;
+
+				requete = this.getConnexion().prepareStatement("INSERT INTO CD(idDVD, genre,artiste) VALUES(?,?,?)");
+				requete.setInt(1, id);
+				requete.setString(2, c.getGenre());
+				requete.setString(3, c.getArtiste());
+			}
+
+			requete.execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (resultat != null)
+					resultat.close();
+				if (requete != null)
+					requete.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
 	public List<Document> getAll() {
-		List<Document> utilisateurs = new LinkedList<Document>();
+		List<Document> documents = new LinkedList<Document>();
 
 		ResultSet resultat = null;
 		Statement requete = null;
 
 		try {
 			requete = this.getConnexion().createStatement();
-			resultat = requete.executeQuery("SELECT * FROM document d INNER JOIN livre l ON c.IdDocument=d.IdDocument");
+			resultat = requete.executeQuery("SELECT * FROM document d INNER JOIN livre c ON d.IdDocument=c.IdLivre");
 
 			while (resultat.next()) {
 				int idDocument = resultat.getInt("idDocument");
 				String titreDocument = resultat.getString("titreDocument");
 				LocalDate dateDocument = resultat.getDate("dateDocument").toLocalDate();
 				boolean emprunte = resultat.getBoolean("emprunte");
+				EtatDocument etat = (emprunte ? new Emprunte() : new Libre());
 
-				EtatDocument etat = (emprunte?new Emprunte():new Libre());
-				
-				Livre l = new Livre(idDocument, titreDocument, dateDocument, etat);
+				String auteur = resultat.getString("auteur");
+
+				Livre l = new Livre(idDocument, titreDocument, dateDocument, auteur, etat);
+				documents.add(l);
+			}
+
+			requete = this.getConnexion().createStatement();
+			resultat = requete.executeQuery("SELECT * FROM document d INNER JOIN DVD c ON d.IdDocument=c.IdDVD");
+
+			while (resultat.next()) {
+				int idDocument = resultat.getInt("idDocument");
+				String titreDocument = resultat.getString("titreDocument");
+				LocalDate dateDocument = resultat.getDate("dateDocument").toLocalDate();
+				boolean emprunte = resultat.getBoolean("emprunte");
+				EtatDocument etat = (emprunte ? new Emprunte() : new Libre());
+
+				String realisateur = resultat.getString("realisateur");
+				String qualite = resultat.getString("qualite");
+
+				DVD d = new DVD(idDocument, titreDocument, dateDocument, realisateur, qualite, etat);
+				documents.add(d);
+			}
+
+			requete = this.getConnexion().createStatement();
+			resultat = requete.executeQuery("SELECT * FROM document d INNER JOIN CD c ON d.IdDocument=c.IdCD");
+
+			while (resultat.next()) {
+				int idDocument = resultat.getInt("idDocument");
+				String titreDocument = resultat.getString("titreDocument");
+				LocalDate dateDocument = resultat.getDate("dateDocument").toLocalDate();
+				boolean emprunte = resultat.getBoolean("emprunte");
+				EtatDocument etat = (emprunte ? new Emprunte() : new Libre());
+
+				String artiste = resultat.getString("artiste");
+				String genre = resultat.getString("genre");
+
+				CD c = new CD(idDocument, titreDocument, dateDocument, genre, artiste, etat);
+				documents.add(c);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (resultat != null)
+					resultat.close();
+				if (requete != null)
+					requete.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return documents;
+	}
+
+	@Override
+	public Document getFromId(int id) {
+		ResultSet resultat = null;
+		PreparedStatement requete = null;
+
+		try {
+
+			requete = this.getConnexion().prepareStatement("SELECT * FROM documents WHERE idDocument=?");
+			requete.setInt(1, id);
+			resultat = requete.executeQuery();
+
+			resultat.next();
+			int idDocument = resultat.getInt("idDocument");
+			String titreDocument = resultat.getString("titreDocument");
+			LocalDate dateDocument = resultat.getDate("dateDocument").toLocalDate();
+			boolean emprunte = resultat.getBoolean("emprunte");
+			EtatDocument etat = (emprunte ? new Emprunte() : new Libre());
+
+			String type = resultat.getString("type");
+			switch (type) {
+			case "Livre":
+				requete = this.getConnexion().prepareStatement("SELECT * FROM livre WHERE idLivre=?");
+				requete.setInt(1, id);
+				resultat = requete.executeQuery();
+
+				String auteur = resultat.getString("auteur");
+
+				try {
+					if (resultat != null)
+						resultat.close();
+					if (requete != null)
+						requete.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+				return new Livre(idDocument, titreDocument, dateDocument, auteur, etat);
+			case "DVD":
+				requete = this.getConnexion().prepareStatement("SELECT * FROM livre WHERE idLivre=?");
+				requete.setInt(1, id);
+				resultat = requete.executeQuery();
+
+				String realisateur = resultat.getString("realisateur");
+				String qualite = resultat.getString("qualite");
+
+				try {
+					if (resultat != null)
+						resultat.close();
+					if (requete != null)
+						requete.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				return new DVD(idDocument, titreDocument, dateDocument, realisateur, qualite, etat);
+			case "CD":
+				requete = this.getConnexion().prepareStatement("SELECT * FROM livre WHERE idLivre=?");
+				requete.setInt(1, id);
+				resultat = requete.executeQuery();
+
+				String genre = resultat.getString("genre");
+				String artiste = resultat.getString("artiste");
+
+				try {
+					if (resultat != null)
+						resultat.close();
+					if (requete != null)
+						requete.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				return new CD(idDocument, titreDocument, dateDocument, genre, artiste, etat);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (resultat != null)
+					resultat.close();
+				if (requete != null)
+					requete.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return null;
 	}
 
 	@Override
-	public Document getFromId(int id) {
-		// TODO Auto-generated method stub
-		return null;
+	public void delete(int id) {
+		PreparedStatement requete = null;
+
+		try {
+			requete = this.getConnexion().prepareStatement("DELETE FROM documents WHERE idDocument=?");
+			requete.setInt(1, id);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (requete != null)
+					requete.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 
-	@Override
-	public void delete(Document tuple) {
-		// TODO Auto-generated method stub
+	public void emprunter(Document d) {
+		PreparedStatement requete = null;
 
+		ADocument doc = (ADocument) d;
+
+		try {
+
+			requete = this.getConnexion().prepareStatement("UPDATE documents SET emprunte=? WHERE idDocument=?");
+			requete.setBoolean(1, true);
+			requete.setInt(2, doc.getNumero());
+
+			requete.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (requete != null)
+					requete.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	public void retourner(Document d) {
+		PreparedStatement requete = null;
+
+		ADocument doc = (ADocument) d;
+
+		try {
+
+			requete = this.getConnexion().prepareStatement("UPDATE documents SET emprunte=? WHERE idDocument=?");
+			requete.setBoolean(1, false);
+			requete.setInt(2, doc.getNumero());
+
+			requete.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (requete != null)
+					requete.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

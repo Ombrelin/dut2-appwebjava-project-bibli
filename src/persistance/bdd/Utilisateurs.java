@@ -23,15 +23,23 @@ public class Utilisateurs extends DAO<Utilisateur> {
 	@Override
 	public void insert(Utilisateur tuple) {
 		AUtilisateur u = (AUtilisateur) tuple;
+		PreparedStatement requete = null;
 		try {
-			PreparedStatement requete = this.getConnexion()
+			requete = this.getConnexion()
 					.prepareStatement("INSERT INTO utilisateur(login,password,isBib) VALUES(?,?,?)");
 			requete.setString(1, u.getLogin());
 			requete.setString(2, Password.hashPassword(u.getPassword()));
 			requete.setBoolean(3, u.isBibliothecaire());
 			requete.executeUpdate();
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			e.printStackTrace();
+		} finally {
+			try {
+				if (requete != null)
+					requete.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -59,15 +67,15 @@ public class Utilisateurs extends DAO<Utilisateur> {
 			}
 
 		} catch (SQLException e) {
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 		} finally {
 			try {
 				if (resultat != null)
 					resultat.close();
 				if (requete != null)
 					requete.close();
-			} catch (SQLException ignore) {
-				System.err.println(ignore.getMessage());
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -103,8 +111,8 @@ public class Utilisateurs extends DAO<Utilisateur> {
 					resultat.close();
 				if (requete != null)
 					requete.close();
-			} catch (SQLException ignore) {
-				System.err.println(ignore.getMessage());
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -112,13 +120,12 @@ public class Utilisateurs extends DAO<Utilisateur> {
 	}
 
 	@Override
-	public void delete(Utilisateur tuple) {
+	public void delete(int id) {
 		PreparedStatement requete = null;
-		AUtilisateur u = (AUtilisateur) tuple;
 		try {
 			// Initialisation de la requ�te SQL
 			requete = this.getConnexion().prepareStatement("DELETE FROM utilisateur WHERE IdUtilisateur=?");
-			requete.setInt(1, u.getId());
+			requete.setInt(1, id);
 			// Ex�cution de la requ�te SQL
 			requete.executeUpdate();
 
@@ -128,8 +135,8 @@ public class Utilisateurs extends DAO<Utilisateur> {
 			try {
 				if (requete != null)
 					requete.close();
-			} catch (SQLException ignore) {
-				System.err.println(ignore.getMessage());
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -174,7 +181,8 @@ public class Utilisateurs extends DAO<Utilisateur> {
 					resultat.close();
 				if (requete != null)
 					requete.close();
-			} catch (SQLException ignore) {
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 		return u;
@@ -204,7 +212,8 @@ public class Utilisateurs extends DAO<Utilisateur> {
 					resultat.close();
 				if (requete != null)
 					requete.close();
-			} catch (SQLException ignore) {
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
 		return id;

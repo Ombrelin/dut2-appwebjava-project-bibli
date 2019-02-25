@@ -16,6 +16,13 @@ public abstract class ADocument implements Document {
 
 	private EtatDocument etat;
 
+	
+	public ADocument(String titre, LocalDate date, EtatDocument etat) {
+		super();
+		this.titre = titre;
+		this.date = date;
+		this.etat = etat;
+	}
 	public ADocument(int numero, String titre, LocalDate date, EtatDocument etat) {
 		super();
 		this.titre = titre;
@@ -51,6 +58,10 @@ public abstract class ADocument implements Document {
 		return etat;
 	}
 
+	public boolean isEmprunte() {
+		return etat.isEmprunte();
+	}
+	
 	public int getNumero() {
 		return numero;
 	}

@@ -6,6 +6,13 @@ public class Livre extends ADocument {
 
 	private String auteur;
 
+	
+	
+	public Livre(String titre, LocalDate date, String auteur, EtatDocument etat) {
+		super(titre, date, etat);
+		this.auteur = auteur;
+	}
+
 	public Livre(int numero,String titre, LocalDate date, String auteur, EtatDocument etat) {
 		super(numero,titre, date, etat);
 		this.auteur = auteur;
