@@ -16,7 +16,7 @@ import persistance.modele.etatdoc.Libre;
 // via une auto-déclaration dans son bloc static
 
 public class MediathequeData implements PersistentMediatheque {
-// Jean-Fran�ois Brette 01/01/2018
+// Jean-François Brette 01/01/2018
 	static {
 		Mediatheque.getInstance().setData(new MediathequeData());
 	}
