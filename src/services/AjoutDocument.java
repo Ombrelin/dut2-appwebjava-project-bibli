@@ -31,7 +31,7 @@ public class AjoutDocument extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-
+		request.setAttribute("typeAjout", request.getParameter("typeAjout"));
 		Utilisateur u = (Utilisateur) session.getAttribute("utilisateur");
 
 		if (u == null) {
@@ -77,6 +77,8 @@ public class AjoutDocument extends HttpServlet {
 		default:
 			throw new IllegalStateException("Problème de type d'ajout");
 		}
+		
+		request.getRequestDispatcher("./Bibliothequaire").forward(request, response);
 	}
 
 }

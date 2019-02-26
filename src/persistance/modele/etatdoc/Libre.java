@@ -22,7 +22,7 @@ public class Libre implements EtatDocument {
 
 	@Override
 	public boolean isEmprunte() {
-		return true;
+		return false;
 	}
 
 }
