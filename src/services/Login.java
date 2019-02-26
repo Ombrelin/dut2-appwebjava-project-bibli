@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import mediatheque.Document;
+import exceptions.MauvaisMDPException;
+import exceptions.UtilisateurInexistantException;
 import mediatheque.Mediatheque;
 import mediatheque.Utilisateur;
 
@@ -51,16 +52,24 @@ public class Login extends HttpServlet {
 		String login = request.getParameter("login");
 		String password = request.getParameter("password");
 
-		Utilisateur u = Mediatheque.getInstance().getUser(login, password);
-
-		if (u != null) {
+		try {
+			Utilisateur u = Mediatheque.getInstance().getUser(login, password);
 			session.setAttribute("utilisateur", u);
-			request.getRequestDispatcher("./Welcome").forward(request, response);
-		}
-		else {
-			request.setAttribute("erreur", "Login ou Mot de passe invalide");
+			if(u.isBibliothecaire()) {
+				request.getRequestDispatcher("./Bibliothequaire").forward(request, response);
+			}
+			else {
+				request.getRequestDispatcher("./Abonne").forward(request, response);
+			}
+			
+		} catch (UtilisateurInexistantException e) {
+			request.setAttribute("erreur", "Login invalide");
+			this.getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+		} catch (MauvaisMDPException e) {
+			request.setAttribute("erreur", "Mot de passe invalide");
 			this.getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
 		}
+		
 	}
 
 }

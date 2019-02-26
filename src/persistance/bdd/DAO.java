@@ -1,6 +1,7 @@
 package persistance.bdd;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -66,6 +67,21 @@ public abstract class DAO<T> {
 	 */
 	public Connection getConnexion() {
 		return connexion;
+	}
+	
+	@Override
+	public void finalize() {
+		try {
+			connexion.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		try {
+			super.finalize();
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }

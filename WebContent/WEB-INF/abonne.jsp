@@ -8,6 +8,10 @@
 <title>Médiatheque - Bienvenue</title>
 </head>
 <body>
-Bonjour <j:out value="${ sessionScope.utilisateur }"></j:out>
+Bonjour <j:out value="${ sessionScope.utilisateur }"></j:out>. Vous êtes abonné.
+
+<a href="<j:url value="/Emprunt"></j:url>">Emprunter</a>
+<a href="<j:url value="/Retour" ></j:url>">Retourner</a>
+
 </body>
 </html>

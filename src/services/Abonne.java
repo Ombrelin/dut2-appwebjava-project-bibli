@@ -1,23 +1,27 @@
 package services;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import mediatheque.Utilisateur;
 
 /**
- * Servlet implementation class Welcome
+ * Servlet implementation class Abonne
  */
-@WebServlet("/Welcome")
-public class Welcome extends HttpServlet {
+@WebServlet("/Abonne")
+public class Abonne extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Welcome() {
+    public Abonne() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -26,7 +30,21 @@ public class Welcome extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		this.getServletContext().getRequestDispatcher("/WEB-INF/welcome.jsp").forward(request, response);
+		HttpSession session = request.getSession();
+		
+		Utilisateur u = (Utilisateur) session.getAttribute("utilisateur");
+		
+		if( u == null) {
+			request.getRequestDispatcher("./Login").forward(request, response);
+		}
+		else if(u.isBibliothecaire()) {
+			request.getRequestDispatcher("./Login").forward(request, response);
+		}
+		else {
+			this.getServletContext().getRequestDispatcher("/WEB-INF/abonne.jsp").forward(request, response);
+		}
+		
+		
 	}
 
 	/**

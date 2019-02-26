@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import mediatheque.Document;
+import mediatheque.Utilisateur;
 import persistance.modele.document.ADocument;
 import persistance.modele.document.CD;
 import persistance.modele.document.DVD;
@@ -17,6 +18,7 @@ import persistance.modele.document.EtatDocument;
 import persistance.modele.document.Livre;
 import persistance.modele.etatdoc.Emprunte;
 import persistance.modele.etatdoc.Libre;
+import persistance.modele.utilisateur.AUtilisateur;
 
 public class Documents extends DAO<Document> {
 
@@ -260,16 +262,17 @@ public class Documents extends DAO<Document> {
 
 	}
 
-	public void emprunter(Document d) {
+	public void emprunter(Document d, Utilisateur u) {
 		PreparedStatement requete = null;
-
 		ADocument doc = (ADocument) d;
-
+		AUtilisateur emprunteur = (AUtilisateur) u;
+		
 		try {
 
-			requete = this.getConnexion().prepareStatement("UPDATE documents SET emprunte=? WHERE idDocument=?");
+			requete = this.getConnexion().prepareStatement("UPDATE documents SET emprunte=?,idEmprunteur=? WHERE idDocument=?");
 			requete.setBoolean(1, true);
-			requete.setInt(2, doc.getNumero());
+			requete.setInt(2, emprunteur.getId());
+			requete.setInt(3, doc.getNumero());
 
 			requete.executeUpdate();
 
