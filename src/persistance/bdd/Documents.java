@@ -58,7 +58,7 @@ public class Documents extends DAO<Document> {
 			} else if (tuple instanceof CD) {
 				CD c = (CD) doc;
 
-				requete = this.getConnexion().prepareStatement("INSERT INTO CD(idDVD, genre,artiste) VALUES(?,?,?)");
+				requete = this.getConnexion().prepareStatement("INSERT INTO CD(idCD, genre,artiste) VALUES(?,?,?)");
 				requete.setInt(1, id);
 				requete.setString(2, c.getGenre());
 				requete.setString(3, c.getArtiste());

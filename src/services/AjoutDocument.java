@@ -72,7 +72,7 @@ public class AjoutDocument extends HttpServlet {
 		case 3:
 			String artiste = request.getParameter("artiste");
 			String genre = request.getParameter("genre");
-			m.nouveauDocument(3, titre, date, artiste, genre);
+			m.nouveauDocument(3, titre, date, genre,artiste);
 			break;
 		default:
 			throw new IllegalStateException("Problème de type d'ajout");

@@ -13,5 +13,7 @@ Bonjour <j:out value="${ sessionScope.utilisateur }"></j:out>. Vous êtes abonn�
 <a href="<j:url value="/Emprunt"></j:url>">Emprunter</a>
 <a href="<j:url value="/Retour" ></j:url>">Retourner</a>
 
+<a href="<j:url value="/Deconnexion"></j:url>">Déconnexion</a>
+
 </body>
 </html>

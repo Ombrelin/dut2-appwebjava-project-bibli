@@ -24,7 +24,7 @@
 			<label for="realisateur">Réalisateur du film : </label>
 			<input type="text" id="realisateur" name="realisateur" required />
 
-			<label for="qualite">Réalisateur du film : </label>
+			<label for="qualite">Qualité du film : </label>
 			<select id="qualite" name="qualite" required>
 				<option value="SD">Définition Standard (SD - 480p)</option>
 				<option value="HD">Haute Définition (HD - 720p)</option>
@@ -34,9 +34,9 @@
 		</j:if>
 
 		<j:if test="${ typeAjout == 	'3' }">
-			<label for="artiste">Réalisateur du film : </label>
+			<label for="artiste">Artiste : </label>
 			<input type="text" id="artiste" name="artiste" required />
-			<label for="genre">Réalisateur du film : </label>
+			<label for="genre">Genre : </label>
 			<input type="text" id="genre" name="genre" required />
 		</j:if>
 		<input type="submit" value="Ajouter le document" />

@@ -14,5 +14,9 @@
 	<input type="text" name="numero" id="numero"/>
 	<input type="submit"/>
 </form>
+<j:if test="${ !empty erreur }">
+	<j:out value="${ erreur }"></j:out>
+</j:if>
+
 </body>
 </html>

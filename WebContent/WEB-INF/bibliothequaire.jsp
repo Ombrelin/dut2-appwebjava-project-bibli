@@ -14,5 +14,6 @@ Bonjour <j:out value="${ sessionScope.utilisateur }"></j:out>. Vous êtes biblio
 <a href="<j:url value="${ '/AjoutDocument?typeAjout=2' }"></j:url>">Ajouter un DVD</a>
 <a href="<j:url value="${ '/AjoutDocument?typeAjout=3' }"></j:url>">Ajouter un CD</a>
 
+<a href="<j:url value="/Deconnexion"></j:url>">Déconnexion</a>
 </body>
 </html>
