@@ -15,7 +15,6 @@ public class Emprunte implements EtatDocument {
 
 	@Override
 	public EtatDocument retour(Document d) {
-		d.retour();
 		new Documents().retourner(d);
 		return new Libre();
 	}

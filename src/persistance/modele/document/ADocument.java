@@ -65,5 +65,21 @@ public abstract class ADocument implements Document {
 	public int getNumero() {
 		return numero;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.isEmprunte()?"[EMPRUNTE] ":"[LIBRE] ");
+		sb.append(this.getNumero());
+		sb.append(" - ");
+		sb.append(this.getClass().getSimpleName());
+		sb.append(" : ");
+		sb.append(this.getTitre());
+		sb.append(" (");
+		sb.append(this.getDate().getYear());
+		sb.append(" )");
+		
+		return sb.toString();
+	}
 
 }

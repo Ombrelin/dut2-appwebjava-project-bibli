@@ -60,10 +60,10 @@ public class MediathequeData implements PersistentMediatheque {
 			d = new Livre(args[0].toString(),dateDocument,args[2].toString(),new Libre());
 			break;
 		case 2:
-			d = new DVD(args[0].toString(),dateDocument,args[1].toString(),args[2].toString(), new Libre());
+			d = new DVD(args[0].toString(),dateDocument,args[2].toString(),args[3].toString(), new Libre());
 			break;
 		case 3:
-			d = new CD(args[0].toString(),dateDocument,args[1].toString(),args[2].toString(), new Libre());
+			d = new CD(args[0].toString(),dateDocument,args[2].toString(),args[3].toString(), new Libre());
 		}
 		
 		dbDocuments.insert(d);

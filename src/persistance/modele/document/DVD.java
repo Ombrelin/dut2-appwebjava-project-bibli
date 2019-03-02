@@ -27,5 +27,19 @@ public class DVD extends ADocument {
 	public Qualite getQualite() {
 		return qualite;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(super.toString());
+		sb.append(" réalisé par ");
+		sb.append(this.getRealisateur());
+		sb.append(" (");
+		sb.append(this.getQualite());
+		sb.append(")");
+		
+		return sb.toString();
+	}
 
 }

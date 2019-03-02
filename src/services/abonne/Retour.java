@@ -1,7 +1,6 @@
-package services;
+package services.abonne;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,20 +9,21 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import mediatheque.Document;
+import mediatheque.EmpruntException;
 import mediatheque.Mediatheque;
 import mediatheque.Utilisateur;
 
 /**
- * Servlet implementation class Login
+ * Servlet implementation class Retour
  */
-@WebServlet("/Login")
-public class Login extends HttpServlet {
+@WebServlet("/Retour")
+public class Retour extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public Login() {
+	public Retour() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -34,8 +34,17 @@ public class Login extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		HttpSession session = request.getSession();
 
-		this.getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+		Utilisateur u = (Utilisateur) session.getAttribute("utilisateur");
+
+		if (u == null) {
+			response.sendRedirect("/projet-app-web-java/Login");
+		} else if (u.isBibliothecaire()) {
+			response.sendRedirect("/projet-app-web-java/Login");
+		} else {
+			this.getServletContext().getRequestDispatcher("/WEB-INF/retour.jsp").forward(request, response);
+		}
 	}
 
 	/**
@@ -44,23 +53,16 @@ public class Login extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// Récupération de la session
-		HttpSession session = request.getSession();
+		Mediatheque m = Mediatheque.getInstance();
 
-		// Récupération des informations du formulaire
-		String login = request.getParameter("login");
-		String password = request.getParameter("password");
+		String numDocParam = request.getParameter("numero");
+		int numDoc = Integer.parseInt(numDocParam);
 
-		Utilisateur u = Mediatheque.getInstance().getUser(login, password);
+		Document d = m.getDocument(numDoc);
 
-		if (u != null) {
-			session.setAttribute("utilisateur", u);
-			request.getRequestDispatcher("./Welcome").forward(request, response);
-		}
-		else {
-			request.setAttribute("erreur", "Login ou Mot de passe invalide");
-			this.getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
-		}
+		m.retour(d);
+		response.sendRedirect("/projet-app-web-java/Abonne");
+
 	}
 
 }

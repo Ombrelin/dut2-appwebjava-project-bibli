@@ -1,0 +1,49 @@
+header{
+    width: 100vw;
+    height: 100vh;
+}
+
+body{
+	background-image: url(../images/background.png);
+}
+
+.erreur{
+    color: red !important;
+}
+
+.petite-carte{
+	margin-top: 20vh !important;
+    max-height: 45vh !important;
+}
+
+.fill{
+	width: 100%;
+}
+
+.mdl-card__title {
+  color: #fff;
+  background-color: #607D8B;
+}
+
+#logout{
+	background-color: #D50000 !important;
+}
+
+.emprunt-retour{
+	margin-top: 20vh !important;
+	height: 30vh !important;
+}
+
+#addDoc{
+	height: 70vh !important;
+}
+
+
+table{
+	width: 100% !important;	
+}
+
+td{
+	
+	text-align: left !important;
+}

@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import mediatheque.Document;
+import mediatheque.Utilisateur;
 import persistance.modele.document.ADocument;
 import persistance.modele.document.CD;
 import persistance.modele.document.DVD;
@@ -17,6 +18,7 @@ import persistance.modele.document.EtatDocument;
 import persistance.modele.document.Livre;
 import persistance.modele.etatdoc.Emprunte;
 import persistance.modele.etatdoc.Libre;
+import persistance.modele.utilisateur.AUtilisateur;
 
 public class Documents extends DAO<Document> {
 
@@ -26,8 +28,10 @@ public class Documents extends DAO<Document> {
 		ResultSet resultat = null;
 		ADocument doc = (ADocument) tuple;
 		try {
+			this.getConnexion().setAutoCommit(false);
 			requete = this.getConnexion().prepareStatement(
-					"INSERT INTO documents(titreDocument,dateDocument,emprunte,type) VALUES(?,?,?,?)");
+					"INSERT INTO document(titreDocument,dateDocument,emprunte,type,idEmprunteur) VALUES(?,?,?,?,null)",
+					Statement.RETURN_GENERATED_KEYS);
 			requete.setString(1, doc.getTitre());
 			requete.setDate(2, Date.valueOf(doc.getDate()));
 			requete.setBoolean(3, doc.isEmprunte());
@@ -55,13 +59,15 @@ public class Documents extends DAO<Document> {
 			} else if (tuple instanceof CD) {
 				CD c = (CD) doc;
 
-				requete = this.getConnexion().prepareStatement("INSERT INTO CD(idDVD, genre,artiste) VALUES(?,?,?)");
+				requete = this.getConnexion().prepareStatement("INSERT INTO CD(idCD, genre,artiste) VALUES(?,?,?)");
 				requete.setInt(1, id);
 				requete.setString(2, c.getGenre());
 				requete.setString(3, c.getArtiste());
 			}
 
 			requete.execute();
+			this.getConnexion().commit();
+			this.getConnexion().setAutoCommit(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -157,7 +163,7 @@ public class Documents extends DAO<Document> {
 
 		try {
 
-			requete = this.getConnexion().prepareStatement("SELECT * FROM documents WHERE idDocument=?");
+			requete = this.getConnexion().prepareStatement("SELECT * FROM document WHERE idDocument=?");
 			requete.setInt(1, id);
 			resultat = requete.executeQuery();
 
@@ -174,9 +180,10 @@ public class Documents extends DAO<Document> {
 				requete = this.getConnexion().prepareStatement("SELECT * FROM livre WHERE idLivre=?");
 				requete.setInt(1, id);
 				resultat = requete.executeQuery();
-
+				resultat.next();
 				String auteur = resultat.getString("auteur");
-
+				
+				
 				try {
 					if (resultat != null)
 						resultat.close();
@@ -188,10 +195,10 @@ public class Documents extends DAO<Document> {
 
 				return new Livre(idDocument, titreDocument, dateDocument, auteur, etat);
 			case "DVD":
-				requete = this.getConnexion().prepareStatement("SELECT * FROM livre WHERE idLivre=?");
+				requete = this.getConnexion().prepareStatement("SELECT * FROM DVD WHERE idDVD=?");
 				requete.setInt(1, id);
 				resultat = requete.executeQuery();
-
+				resultat.next();
 				String realisateur = resultat.getString("realisateur");
 				String qualite = resultat.getString("qualite");
 
@@ -205,10 +212,10 @@ public class Documents extends DAO<Document> {
 				}
 				return new DVD(idDocument, titreDocument, dateDocument, realisateur, qualite, etat);
 			case "CD":
-				requete = this.getConnexion().prepareStatement("SELECT * FROM livre WHERE idLivre=?");
+				requete = this.getConnexion().prepareStatement("SELECT * FROM CD WHERE idCD=?");
 				requete.setInt(1, id);
 				resultat = requete.executeQuery();
-
+				resultat.next();
 				String genre = resultat.getString("genre");
 				String artiste = resultat.getString("artiste");
 
@@ -244,7 +251,7 @@ public class Documents extends DAO<Document> {
 		PreparedStatement requete = null;
 
 		try {
-			requete = this.getConnexion().prepareStatement("DELETE FROM documents WHERE idDocument=?");
+			requete = this.getConnexion().prepareStatement("DELETE FROM document WHERE idDocument=?");
 			requete.setInt(1, id);
 
 		} catch (Exception e) {
@@ -260,16 +267,18 @@ public class Documents extends DAO<Document> {
 
 	}
 
-	public void emprunter(Document d) {
+	public void emprunter(Document d, Utilisateur u) {
 		PreparedStatement requete = null;
-
 		ADocument doc = (ADocument) d;
+		AUtilisateur emprunteur = (AUtilisateur) u;
 
 		try {
 
-			requete = this.getConnexion().prepareStatement("UPDATE documents SET emprunte=? WHERE idDocument=?");
+			requete = this.getConnexion()
+					.prepareStatement("UPDATE document SET emprunte=?,idEmprunteur=? WHERE idDocument=?");
 			requete.setBoolean(1, true);
-			requete.setInt(2, doc.getNumero());
+			requete.setInt(2, emprunteur.getId());
+			requete.setInt(3, doc.getNumero());
 
 			requete.executeUpdate();
 
@@ -293,7 +302,7 @@ public class Documents extends DAO<Document> {
 
 		try {
 
-			requete = this.getConnexion().prepareStatement("UPDATE documents SET emprunte=? WHERE idDocument=?");
+			requete = this.getConnexion().prepareStatement("UPDATE document SET emprunte=? WHERE idDocument=?");
 			requete.setBoolean(1, false);
 			requete.setInt(2, doc.getNumero());
 

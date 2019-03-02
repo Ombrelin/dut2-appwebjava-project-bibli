@@ -10,8 +10,7 @@ public class Libre implements EtatDocument {
 
 	@Override
 	public EtatDocument emprunter(Utilisateur u, Document d) throws EmpruntException {
-		d.emprunter(u);
-		new Documents().emprunter(d);
+		new Documents().emprunter(d,u);
 		return new Emprunte();
 	}
 
@@ -22,7 +21,7 @@ public class Libre implements EtatDocument {
 
 	@Override
 	public boolean isEmprunte() {
-		return true;
+		return false;
 	}
 
 }

@@ -14,5 +14,10 @@ public class Bibliothequaire extends AUtilisateur {
 	public boolean isBibliothecaire() {
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		return this.getLogin();
+	}
 
 }
