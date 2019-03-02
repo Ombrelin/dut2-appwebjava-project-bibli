@@ -31,5 +31,18 @@ public class CD extends ADocument {
 	public String getArtiste() {
 		return artiste;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(super.toString());
+		sb.append(" chanté par ");
+		sb.append(this.getArtiste());
+		sb.append(" (");
+		sb.append(this.getGenre());
+		sb.append(")");
+		
+		return sb.toString();
+	}
 
 }

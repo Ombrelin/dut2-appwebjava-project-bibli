@@ -7,12 +7,12 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
+import bcrypt.Password;
 import exceptions.MauvaisMDPException;
 import exceptions.UtilisateurInexistantException;
 import mediatheque.Utilisateur;
 import persistance.modele.utilisateur.AUtilisateur;
 import persistance.modele.utilisateur.FactoryUtilisateur;
-import util.securite.Password;
 
 public class Utilisateurs extends DAO<Utilisateur> {
 

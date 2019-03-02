@@ -1,4 +1,4 @@
-package services;
+package services.abonne;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -8,19 +8,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import mediatheque.Document;
+import mediatheque.EmpruntException;
+import mediatheque.Mediatheque;
 import mediatheque.Utilisateur;
 
 /**
- * Servlet implementation class Welcome
+ * Servlet implementation class Retour
  */
-@WebServlet("/Bibliothequaire")
-public class Bibliothequaire extends HttpServlet {
+@WebServlet("/Retour")
+public class Retour extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public Bibliothequaire() {
+	public Retour() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -36,12 +39,11 @@ public class Bibliothequaire extends HttpServlet {
 		Utilisateur u = (Utilisateur) session.getAttribute("utilisateur");
 
 		if (u == null) {
-			request.getRequestDispatcher("./Login").forward(request, response);
-		} else if (!u.isBibliothecaire()) {
-			request.getRequestDispatcher("./Login").forward(request, response);
-		}
-		else {
-			this.getServletContext().getRequestDispatcher("/WEB-INF/bibliothequaire.jsp").forward(request, response);
+			response.sendRedirect("/projet-app-web-java/Login");
+		} else if (u.isBibliothecaire()) {
+			response.sendRedirect("/projet-app-web-java/Login");
+		} else {
+			this.getServletContext().getRequestDispatcher("/WEB-INF/retour.jsp").forward(request, response);
 		}
 	}
 
@@ -51,8 +53,16 @@ public class Bibliothequaire extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		Mediatheque m = Mediatheque.getInstance();
+
+		String numDocParam = request.getParameter("numero");
+		int numDoc = Integer.parseInt(numDocParam);
+
+		Document d = m.getDocument(numDoc);
+
+		m.retour(d);
+		response.sendRedirect("/projet-app-web-java/Abonne");
+
 	}
 
 }

@@ -1,4 +1,4 @@
-package services;
+package services.auth;
 
 import java.io.IOException;
 
@@ -56,18 +56,18 @@ public class Login extends HttpServlet {
 			Utilisateur u = Mediatheque.getInstance().getUser(login, password);
 			session.setAttribute("utilisateur", u);
 			if(u.isBibliothecaire()) {
-				request.getRequestDispatcher("./Bibliothequaire").forward(request, response);
+				response.sendRedirect("/projet-app-web-java/Bibliothequaire");
 			}
 			else {
-				request.getRequestDispatcher("./Abonne").forward(request, response);
+				response.sendRedirect("/projet-app-web-java/Abonne");
 			}
 			
 		} catch (UtilisateurInexistantException e) {
 			request.setAttribute("erreur", "Login invalide");
-			this.getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+			response.sendRedirect("/projet-app-web-java/Login");
 		} catch (MauvaisMDPException e) {
 			request.setAttribute("erreur", "Mot de passe invalide");
-			this.getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+			response.sendRedirect("/projet-app-web-java/Login");
 		}
 		
 	}

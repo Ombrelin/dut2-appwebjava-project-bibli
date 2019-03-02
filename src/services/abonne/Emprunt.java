@@ -1,4 +1,4 @@
-package services;
+package services.abonne;
 
 import java.io.IOException;
 
@@ -37,11 +37,10 @@ HttpSession session = request.getSession();
 		
 		Utilisateur u = (Utilisateur) session.getAttribute("utilisateur");
 		
-		if( u == null) {
-			request.getRequestDispatcher("./Login").forward(request, response);
-		}
-		else if(u.isBibliothecaire()) {
-			request.getRequestDispatcher("./Login").forward(request, response);
+		if (u == null) {
+			response.sendRedirect("/projet-app-web-java/Login");
+		} else if (u.isBibliothecaire()) {
+			response.sendRedirect("/projet-app-web-java/Login");
 		}
 		else {
 			this.getServletContext().getRequestDispatcher("/WEB-INF/emprunt.jsp").forward(request, response);
@@ -63,7 +62,7 @@ HttpSession session = request.getSession();
 		
 		try {
 			m.emprunt(d, u);
-			request.getRequestDispatcher("./Abonne").forward(request, response);
+			response.sendRedirect("/projet-app-web-java/Abonne");
 		} catch (EmpruntException e) {
 			request.setAttribute("erreur", "Ce document est déjà emprunté");
 			this.doGet(request, response);

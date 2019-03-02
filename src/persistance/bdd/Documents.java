@@ -28,6 +28,7 @@ public class Documents extends DAO<Document> {
 		ResultSet resultat = null;
 		ADocument doc = (ADocument) tuple;
 		try {
+			this.getConnexion().setAutoCommit(false);
 			requete = this.getConnexion().prepareStatement(
 					"INSERT INTO document(titreDocument,dateDocument,emprunte,type,idEmprunteur) VALUES(?,?,?,?,null)",
 					Statement.RETURN_GENERATED_KEYS);
@@ -65,6 +66,8 @@ public class Documents extends DAO<Document> {
 			}
 
 			requete.execute();
+			this.getConnexion().commit();
+			this.getConnexion().setAutoCommit(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -192,7 +195,7 @@ public class Documents extends DAO<Document> {
 
 				return new Livre(idDocument, titreDocument, dateDocument, auteur, etat);
 			case "DVD":
-				requete = this.getConnexion().prepareStatement("SELECT * FROM livre WHERE idLivre=?");
+				requete = this.getConnexion().prepareStatement("SELECT * FROM DVD WHERE idDVD=?");
 				requete.setInt(1, id);
 				resultat = requete.executeQuery();
 				resultat.next();
@@ -209,7 +212,7 @@ public class Documents extends DAO<Document> {
 				}
 				return new DVD(idDocument, titreDocument, dateDocument, realisateur, qualite, etat);
 			case "CD":
-				requete = this.getConnexion().prepareStatement("SELECT * FROM livre WHERE idLivre=?");
+				requete = this.getConnexion().prepareStatement("SELECT * FROM CD WHERE idCD=?");
 				requete.setInt(1, id);
 				resultat = requete.executeQuery();
 				resultat.next();

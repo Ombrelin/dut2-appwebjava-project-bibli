@@ -1,4 +1,4 @@
-package services;
+package services.bibli;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -35,12 +35,12 @@ public class AjoutDocument extends HttpServlet {
 		Utilisateur u = (Utilisateur) session.getAttribute("utilisateur");
 
 		if (u == null) {
-			request.getRequestDispatcher("./Login").forward(request, response);
+			response.sendRedirect("/projet-app-web-java/Login");
 		} else if (!u.isBibliothecaire()) {
-			request.getRequestDispatcher("./Login").forward(request, response);
+			response.sendRedirect("/projet-app-web-java/Login");
 		}
 		else if(request.getParameter("typeAjout") == null) {
-			request.getRequestDispatcher("./Bibliothequaire").forward(request, response);
+			response.sendRedirect("/projet-app-web-java/Login");
 		}
 		else {
 			this.getServletContext().getRequestDispatcher("/WEB-INF/ajoutDocument.jsp").forward(request, response);;
@@ -78,7 +78,7 @@ public class AjoutDocument extends HttpServlet {
 			throw new IllegalStateException("Problème de type d'ajout");
 		}
 		
-		request.getRequestDispatcher("./Bibliothequaire").forward(request, response);
+		response.sendRedirect("/projet-app-web-java/Bibliothequaire");
 	}
 
 }

@@ -1,4 +1,4 @@
-package services;
+package services.auth;
 
 import java.io.IOException;
 
@@ -31,7 +31,7 @@ public class Deconnexion extends HttpServlet {
 		HttpSession session = request.getSession();
 		session.invalidate();
 		
-		request.getRequestDispatcher("./Login").forward(request, response);
+		response.sendRedirect("/projet-app-web-java/Login");
 	}
 
 	/**
