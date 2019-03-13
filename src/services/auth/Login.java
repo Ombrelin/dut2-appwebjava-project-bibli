@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import exceptions.MauvaisMDPException;
-import exceptions.UtilisateurInexistantException;
 import mediatheque.Mediatheque;
 import mediatheque.Utilisateur;
 
@@ -62,11 +60,8 @@ public class Login extends HttpServlet {
 				response.sendRedirect("/projet-app-web-java/Abonne");
 			}
 			
-		} catch (UtilisateurInexistantException e) {
-			request.setAttribute("erreur", "Login invalide");
-			response.sendRedirect("/projet-app-web-java/Login");
-		} catch (MauvaisMDPException e) {
-			request.setAttribute("erreur", "Mot de passe invalide");
+		} catch (Exception e) {
+			request.setAttribute("erreur", "Login ou mot de passe invalide");
 			response.sendRedirect("/projet-app-web-java/Login");
 		}
 		

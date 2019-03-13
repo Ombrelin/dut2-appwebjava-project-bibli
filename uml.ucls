@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.2.3" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="true" nesting-relationships="true" router="FAN">  
+  <package id="1" language="java" name="persistance.exceptions" project="projet-app-web-java" 
+    file="/projet-app-web-java/src/persistance/exceptions" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="108" y="393"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="2" language="java" name="persistance.modele.document" project="projet-app-web-java" 
+    file="/projet-app-web-java/src/persistance/modele/document" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="231" y="136"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="3" language="java" name="persistance.modele.utilisateur" project="projet-app-web-java" 
+    file="/projet-app-web-java/src/persistance/modele/utilisateur" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="316" y="393"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="4" language="java" name="persistance.modele.etatdoc" project="projet-app-web-java" 
+    file="/projet-app-web-java/src/persistance/modele/etatdoc" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="277" y="239"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="5" language="java" name="persistance.bdd" project="projet-app-web-java" 
+    file="/projet-app-web-java/src/persistance/bdd" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="85" y="294"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="6" language="java" name="services.auth" project="projet-app-web-java" 
+    file="/projet-app-web-java/src/services/auth" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="675" y="377"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="7" language="java" name="services.abonne" project="projet-app-web-java" 
+    file="/projet-app-web-java/src/services/abonne" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="684" y="252"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="8" language="java" name="services.bibli" project="projet-app-web-java" 
+    file="/projet-app-web-java/src/services/bibli" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="672" y="126"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="9" language="java" name="mediatheque" project="projet-app-web-java" 
+    file="C:/Users/arsen/eclipse-jee-workspace/projet-app-web-java/WebContent/WEB-INF/lib/mediathek.jar" binary="true" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="543" y="250"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <dependency id="10">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="11">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="12">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="13">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="14">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="15">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="16">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="17">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="18">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <dependency id="19">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="20">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="9"/>  
+  </dependency>  
+  <dependency id="21">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

@@ -8,9 +8,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import bcrypt.Password;
-import exceptions.MauvaisMDPException;
-import exceptions.UtilisateurInexistantException;
 import mediatheque.Utilisateur;
+import persistance.exceptions.MauvaisMDPException;
+import persistance.exceptions.UtilisateurInexistantException;
 import persistance.modele.utilisateur.AUtilisateur;
 import persistance.modele.utilisateur.FactoryUtilisateur;
 

@@ -1,4 +1,4 @@
-package exceptions;
+package persistance.exceptions;
 
 public class UtilisateurInexistantException extends RuntimeException {
 	/**
